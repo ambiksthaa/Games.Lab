@@ -1,0 +1,2068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HACKR // LEVEL 2</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050608;
+  --panel:#0b0f14;
+  --panel2:#10161e;
+  --line:#1b2733;
+  --green:#00ff88;
+  --cyan:#00eaff;
+  --red:#ff3158;
+  --yellow:#ffe600;
+  --text:#e9f1f7;
+  --muted:#71808e;
+}
+body{
+  background:
+    radial-gradient(circle at 50% -10%,#10251f 0,#050608 40%),
+    #050608;
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.07;
+  background:repeating-linear-gradient(
+    0deg,transparent 0,transparent 2px,#fff 3px
+  );
+}
+header{
+  min-height:115px;
+  padding:22px 5%;
+  border-bottom:1px solid var(--line);
+  background:#070a0d;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+.logo{
+  font-size:32px;
+  font-weight:1000;
+  letter-spacing:4px;
+  color:var(--green);
+  text-shadow:0 0 15px #00ff8866;
+}
+.logo span{color:#fff}
+.sub{
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:3px;
+  margin-top:5px;
+}
+.topStats{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.stat{
+  background:#0c1218;
+  border:1px solid var(--line);
+  padding:10px 15px;
+  border-radius:8px;
+  font-size:12px;
+}
+.stat b{color:var(--green)}
+main{
+  width:min(1400px,94%);
+  margin:auto;
+  padding:30px 0 70px;
+}
+.hero{
+  padding:25px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:
+    linear-gradient(135deg,#0b1315,#080b10);
+  margin-bottom:22px;
+  position:relative;
+  overflow:hidden;
+}
+.hero:after{
+  content:"LEVEL 02";
+  position:absolute;
+  right:-10px;
+  bottom:-45px;
+  font-size:110px;
+  font-weight:1000;
+  color:#ffffff03;
+}
+.hero h1{
+  font-size:clamp(28px,5vw,55px);
+  letter-spacing:-2px;
+}
+.hero h1 em{
+  color:var(--green);
+  font-style:normal;
+}
+.hero p{
+  color:#82919f;
+  margin-top:10px;
+  line-height:1.5;
+}
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:20px;
+}
+button{
+  border:0;
+  cursor:pointer;
+  font-weight:800;
+  transition:.15s;
+}
+.btn{
+  padding:12px 17px;
+  border-radius:8px;
+  background:#111a21;
+  color:#fff;
+  border:1px solid #243441;
+}
+.btn:hover{
+  transform:translateY(-2px);
+  border-color:var(--green);
+  color:var(--green);
+}
+.btn.green{
+  background:var(--green);
+  color:#001b0e;
+  border-color:var(--green);
+}
+.btn.red{
+  background:#241017;
+  border-color:#55202c;
+  color:#ff6580;
+}
+.sectionTitle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:25px 0 14px;
+}
+.sectionTitle h2{
+  font-size:18px;
+  letter-spacing:2px;
+}
+.sectionTitle span{
+  color:var(--muted);
+  font-size:12px;
+}
+.search{
+  width:260px;
+  max-width:100%;
+  padding:11px 13px;
+  border-radius:8px;
+  border:1px solid var(--line);
+  background:#090d12;
+  color:#fff;
+  outline:none;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:13px;
+}
+.card{
+  background:linear-gradient(145deg,#0c1218,#080c11);
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:16px;
+  min-height:145px;
+  position:relative;
+  overflow:hidden;
+  transition:.2s;
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:#31505d;
+  box-shadow:0 12px 35px #0008;
+}
+.card .num{
+  color:#42515d;
+  font-size:11px;
+  font-weight:bold;
+}
+.icon{
+  font-size:30px;
+  margin:9px 0;
+}
+.card h3{font-size:16px}
+.card p{
+  font-size:11px;
+  color:#71808e;
+  margin:5px 0 13px;
+}
+.play{
+  width:100%;
+  padding:9px;
+  border-radius:7px;
+  background:#121b22;
+  color:var(--green);
+  border:1px solid #20343b;
+}
+.play:hover{
+  background:var(--green);
+  color:#001b0e;
+}
+
+/* GAME SCREEN */
+#gameScreen{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#040608f8;
+  backdrop-filter:blur(12px);
+  padding:15px;
+}
+.gameWindow{
+  width:min(1050px,100%);
+  height:min(850px,100%);
+  margin:auto;
+  border:1px solid #20303b;
+  border-radius:16px;
+  background:#080c11;
+  box-shadow:0 25px 100px #000;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.gameTop{
+  min-height:65px;
+  padding:10px 15px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.gameTitle{
+  font-weight:1000;
+  letter-spacing:2px;
+}
+.gameTitle small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-top:3px;
+  letter-spacing:1px;
+}
+.gameArea{
+  flex:1;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+  overflow:auto;
+}
+#canvas{
+  background:#05080b;
+  border:1px solid #17232c;
+  border-radius:10px;
+  max-width:100%;
+  max-height:100%;
+}
+.infoBar{
+  border-top:1px solid var(--line);
+  padding:10px 15px;
+  color:#7d8b97;
+  font-size:12px;
+  text-align:center;
+}
+.close{
+  background:#181014;
+  color:#ff6077;
+  border:1px solid #49202a;
+  padding:9px 12px;
+  border-radius:7px;
+}
+.gameControls{
+  display:flex;
+  gap:7px;
+  align-items:center;
+}
+.mobileControls{
+  display:none;
+}
+
+/* DOM GAMES */
+.domGame{
+  width:min(720px,100%);
+  min-height:400px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.bigBoard{
+  display:grid;
+  gap:8px;
+}
+.tttBoard{grid-template-columns:repeat(3,100px)}
+.cell{
+  width:100px;
+  height:100px;
+  background:#0d141a;
+  border:1px solid #22343f;
+  border-radius:10px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:48px;
+  font-weight:1000;
+  cursor:pointer;
+}
+.cell:hover{border-color:var(--green)}
+.centerBox{
+  width:min(600px,100%);
+  text-align:center;
+}
+.bigText{
+  font-size:70px;
+  font-weight:1000;
+  margin:20px;
+}
+.choiceRow{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.choice{
+  min-width:120px;
+  padding:20px;
+  border-radius:12px;
+  background:#101820;
+  border:1px solid #233744;
+  color:#fff;
+  font-size:25px;
+}
+.choice:hover{
+  border-color:var(--green);
+  transform:scale(1.04);
+}
+.scoreHuge{
+  font-size:35px;
+  font-weight:1000;
+  margin:15px;
+}
+.colorBox{
+  width:280px;
+  height:180px;
+  margin:20px auto;
+  border-radius:15px;
+  border:2px solid #263640;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:25px;
+  font-weight:1000;
+  cursor:pointer;
+}
+#toast{
+  position:fixed;
+  left:50%;
+  bottom:25px;
+  transform:translateX(-50%) translateY(80px);
+  background:#0e171d;
+  border:1px solid #29404b;
+  color:#fff;
+  padding:12px 20px;
+  border-radius:9px;
+  z-index:300;
+  opacity:0;
+  transition:.25s;
+}
+#toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+@media(max-width:600px){
+  header{align-items:flex-start;flex-direction:column}
+  .topStats{width:100%}
+  .stat{flex:1}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .card{min-height:135px;padding:12px}
+  .tttBoard{grid-template-columns:repeat(3,75px)}
+  .cell{width:75px;height:75px;font-size:35px}
+  .mobileControls{
+    display:flex;
+    position:absolute;
+    bottom:10px;
+    left:50%;
+    transform:translateX(-50%);
+    gap:8px;
+    z-index:5;
+  }
+  .mobileControls button{
+    width:48px;height:48px;
+    border-radius:9px;
+    background:#142029;
+    color:#fff;
+    border:1px solid #29404b;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <div class="logo">HACKR<span>//</span>02</div>
+    <div class="sub">LOCAL 2 PLAYER ARCADE</div>
+  </div>
+
+  <div class="topStats">
+    <div class="stat">GAMES <b id="gameCount">25</b></div>
+    <div class="stat">WINS <b id="wins">0</b></div>
+    <div class="stat">MATCHES <b id="matches">0</b></div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>ENTER THE <em>ARENA.</em></h1>
+    <p>
+      2 players. 1 keyboard. 25 mini-games.
+      Challenge your friend and see who survives LEVEL 2.
+    </p>
+
+    <div class="actions">
+      <button class="btn green" onclick="randomGame()">⚡ RANDOM GAME</button>
+      <button class="btn" onclick="scrollToGames()">🎮 BROWSE GAMES</button>
+      <button class="btn red" onclick="resetStats()">RESET STATS</button>
+    </div>
+  </section>
+
+  <div class="sectionTitle" id="games">
+    <h2>/// GAME TERMINAL</h2>
+    <input class="search" id="search" placeholder="Search games..." oninput="filterGames()">
+  </div>
+
+  <div class="grid" id="gameGrid"></div>
+</main>
+
+<div id="gameScreen">
+  <div class="gameWindow">
+
+    <div class="gameTop">
+      <div class="gameTitle">
+        <span id="gameName">GAME</span>
+        <small id="gameInstruction">READY</small>
+      </div>
+
+      <div class="gameControls">
+        <button class="btn" onclick="restartCurrent()">↻ RESTART</button>
+        <button class="close" onclick="closeGame()">✕ EXIT</button>
+      </div>
+    </div>
+
+    <div class="gameArea" id="gameArea">
+      <canvas id="canvas" width="900" height="560"></canvas>
+    </div>
+
+    <div class="infoBar" id="infoBar"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   HACKR LEVEL 2
+   25 LOCAL 2 PLAYER MINI GAMES
+========================================================= */
+
+const games=[
+ ["Snake Battle","🐍","Eat, grow and crash your opponent.","canvas"],
+ ["Pong","🏓","Classic paddle duel.","canvas"],
+ ["Tic-Tac-Toe","❌","Take three squares in a row.","ttt"],
+ ["Reaction Duel","⚡","Hit your key when the screen turns green.","reaction"],
+ ["Rock Paper Scissors","✊","Choose your weapon.","rps"],
+ ["Tap Race","👆","Tap your key as fast as possible.","tap"],
+ ["Dodge Arena","💥","Survive falling blocks.","dodge"],
+ ["Coin Collector","🪙","Collect more coins than your opponent.","coin"],
+ ["Space Duel","🚀","Shoot down your opponent.","space"],
+ ["Tank Battle","🛡️","Drive, aim and fire.","tank"],
+ ["Mini Football","⚽","Score five goals.","football"],
+ ["Car Dodge","🏎️","Avoid traffic and survive.","car"],
+ ["Racing Duel","🏁","Reach the finish first.","race"],
+ ["Target Duel","🎯","Hit targets faster.","target"],
+ ["Memory Battle","🧠","Remember the card positions.","memory"],
+ ["Math Battle","➗","Solve the equation first.","math"],
+ ["Color Reflex","🎨","Click your color when it appears.","color"],
+ ["Jump Battle","🦘","Jump over incoming obstacles.","jump"],
+ ["Balloon Pop","🎈","Pop your balloons before your rival.","balloon"],
+ ["Box Push","📦","Push the box into your goal.","box"],
+ ["Gravity Duel","🌌","Use gravity to control your orb.","gravity"],
+ ["Survival Arena","☠️","Last player standing wins.","survival"],
+ ["Bomb Dodge","💣","Don't touch the bombs.","bomb"],
+ ["Archery Duel","🏹","Aim for the highest score.","archery"],
+ ["Falling Blocks","🧱","Catch your blocks, miss and lose.","blocks"]
+];
+
+let currentGame=null;
+let gameLoop=null;
+let keys={};
+let stats=JSON.parse(localStorage.getItem("hackrStats")||'{"wins":0,"matches":0}');
+let gameState={};
+
+const $=id=>document.getElementById(id);
+const canvas=$("canvas");
+const ctx=canvas.getContext("2d");
+
+function saveStats(){
+ localStorage.setItem("hackrStats",JSON.stringify(stats));
+ $("wins").textContent=stats.wins;
+ $("matches").textContent=stats.matches;
+}
+saveStats();
+
+function renderGames(){
+ $("gameGrid").innerHTML=games.map((g,i)=>`
+ <div class="card" data-name="${g[0].toLowerCase()}">
+   <div class="num">GAME ${String(i+1).padStart(2,"0")}</div>
+   <div class="icon">${g[1]}</div>
+   <h3>${g[0]}</h3>
+   <p>${g[2]}</p>
+   <button class="play" onclick="startGame(${i})">PLAY →</button>
+ </div>
+ `).join("");
+}
+renderGames();
+
+function filterGames(){
+ let q=$("search").value.toLowerCase();
+ document.querySelectorAll(".card").forEach(c=>{
+   c.style.display=c.dataset.name.includes(q)?"block":"none";
+ });
+}
+
+function scrollToGames(){
+ $("games").scrollIntoView({behavior:"smooth"});
+}
+
+function toast(t){
+ $("toast").textContent=t;
+ $("toast").classList.add("show");
+ setTimeout(()=>$("toast").classList.remove("show"),1800);
+}
+
+function startGame(index){
+ currentGame=index;
+ clearInterval(gameLoop);
+ $("gameScreen").style.display="block";
+ $("gameName").textContent=games[index][0];
+ gameState={};
+ canvas.style.display="block";
+ $("gameArea").innerHTML="";
+ $("gameArea").appendChild(canvas);
+
+ const type=games[index][3];
+
+ if(type==="ttt") initTTT();
+ else if(type==="reaction") initReaction();
+ else if(type==="rps") initRPS();
+ else if(type==="tap") initTap();
+ else if(type==="memory") initMemory();
+ else if(type==="math") initMath();
+ else if(type==="color") initColor();
+ else initCanvasGame(type);
+}
+
+function closeGame(){
+ clearInterval(gameLoop);
+ $("gameScreen").style.display="none";
+ currentGame=null;
+}
+
+function restartCurrent(){
+ if(currentGame!==null) startGame(currentGame);
+}
+
+function win(player){
+ stats.matches++;
+ if(player==="P1") stats.wins++;
+ saveStats();
+ toast(player+" WINS!");
+}
+
+function tie(){
+ stats.matches++;
+ saveStats();
+ toast("DRAW!");
+}
+
+function instruction(t){
+ $("gameInstruction").textContent=t;
+}
+
+function info(t){
+ $("infoBar").textContent=t;
+}
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
+window.addEventListener("keydown",e=>{
+ keys[e.key.toLowerCase()]=true;
+
+ if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key))
+   e.preventDefault();
+});
+window.addEventListener("keyup",e=>{
+ keys[e.key.toLowerCase()]=false;
+});
+
+/* =========================================================
+   DRAW HELPERS
+========================================================= */
+
+function clear(){
+ ctx.fillStyle="#05080b";
+ ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
+function rect(x,y,w,h,c){
+ ctx.fillStyle=c;
+ ctx.fillRect(x,y,w,h);
+}
+
+function circle(x,y,r,c){
+ ctx.fillStyle=c;
+ ctx.beginPath();
+ ctx.arc(x,y,r,0,Math.PI*2);
+ ctx.fill();
+}
+
+function text(t,x,y,size=20,c="#fff",align="left"){
+ ctx.fillStyle=c;
+ ctx.font=`bold ${size}px Arial`;
+ ctx.textAlign=align;
+ ctx.fillText(t,x,y);
+}
+
+function random(a,b){
+ return Math.random()*(b-a)+a;
+}
+
+function hit(a,b){
+ return a.x<b.x+b.w &&
+ a.x+a.w>b.x &&
+ a.y<b.y+b.h &&
+ a.y+a.h>b.y;
+}
+
+/* =========================================================
+   CANVAS GAME ROUTER
+========================================================= */
+
+function initCanvasGame(type){
+ canvas.width=900;
+ canvas.height=560;
+
+ const gamesMap={
+  canvas:initSnake,
+  pong:initPong,
+  dodge:initDodge,
+  coin:initCoin,
+  space:initSpace,
+  tank:initTank,
+  football:initFootball,
+  car:initCar,
+  race:initRace,
+  target:initTarget,
+  jump:initJump,
+  balloon:initBalloon,
+  box:initBox,
+  gravity:initGravity,
+  survival:initSurvival,
+  bomb:initBomb,
+  archery:initArchery,
+  blocks:initBlocks
+ };
+
+ instruction(controlText(type));
+ info("P1 = GREEN   |   P2 = CYAN");
+ gamesMap[type]();
+}
+
+function controlText(type){
+ const map={
+  canvas:"P1: WASD   |   P2: ARROWS",
+  pong:"P1: W/S   |   P2: ↑/↓",
+  dodge:"P1: A/D   |   P2: ←/→",
+  coin:"P1: WASD   |   P2: ARROWS",
+  space:"P1: WASD + F   |   P2: ARROWS + /",
+  tank:"P1: WASD + F   |   P2: ARROWS + /",
+  football:"P1: WASD   |   P2: ARROWS",
+  car:"P1: A/D   |   P2: ←/→",
+  race:"P1: A/D   |   P2: ←/→",
+  target:"P1: F   |   P2: /",
+  jump:"P1: W   |   P2: ↑",
+  balloon:"P1: F   |   P2: /",
+  box:"P1: WASD   |   P2: ARROWS",
+  gravity:"P1: WASD   |   P2: ARROWS",
+  survival:"P1: WASD   |   P2: ARROWS",
+  bomb:"P1: A/D   |   P2: ←/→",
+  archery:"P1: W/S + F   |   P2: ↑/↓ + /",
+  blocks:"P1: A/D   |   P2: ←/→"
+ };
+ return map[type]||"PLAYER 1 vs PLAYER 2";
+}
+
+/* =========================================================
+   1. SNAKE
+========================================================= */
+
+function initSnake(){
+ instruction("P1 WASD | P2 ARROWS | Eat yellow food");
+ let cell=20;
+ let s1={x:100,y:280,dx:cell,dy:0,body:[]};
+ let s2={x:780,y:280,dx:-cell,dy:0,body:[]};
+ let food={x:440,y:280};
+ let tick=0;
+ let over=false;
+
+ for(let i=0;i<5;i++){
+  s1.body.push({x:s1.x-i*cell,y:s1.y});
+  s2.body.push({x:s2.x+i*cell,y:s2.y});
+ }
+
+ function change(s,p){
+  if(p==="p1"){
+   if(keys.w&&s.dy===0){s.dx=0;s.dy=-cell}
+   if(keys.s&&s.dy===0){s.dx=0;s.dy=cell}
+   if(keys.a&&s.dx===0){s.dx=-cell;s.dy=0}
+   if(keys.d&&s.dx===0){s.dx=cell;s.dy=0}
+  }else{
+   if(keys.arrowup&&s.dy===0){s.dx=0;s.dy=-cell}
+   if(keys.arrowdown&&s.dy===0){s.dx=0;s.dy=cell}
+   if(keys.arrowleft&&s.dx===0){s.dx=-cell;s.dy=0}
+   if(keys.arrowright&&s.dx===0){s.dx=cell;s.dy=0}
+  }
+ }
+
+ gameLoop=setInterval(()=>{
+  if(over)return;
+  change(s1,"p1");change(s2,"p2");
+  tick++;
+  if(tick%2)return;
+
+  for(const s of [s1,s2]){
+   s.x+=s.dx;s.y+=s.dy;
+   if(s.x<0||s.y<0||s.x>=canvas.width||s.y>=canvas.height){
+    over=true; win(s===s1?"P2":"P1");return;
+   }
+   if(s.body.some((b,i)=>i>2&&b.x===s.x&&b.y===s.y)){
+    over=true;win(s===s1?"P2":"P1");return;
+   }
+   if(s.body.some(b=>b.x===s2.x&&b.y===s2.y&&s===s1) ||
+      s.body.some(b=>b.x===s1.x&&b.y===s1.y&&s===s2)){
+    over=true;win(s===s1?"P2":"P1");return;
+   }
+   s.body.unshift({x:s.x,y:s.y});
+   if(Math.abs(s.x-food.x)<cell&&Math.abs(s.y-food.y)<cell){
+    food={
+     x:Math.floor(random(1,44))*cell,
+     y:Math.floor(random(1,27))*cell
+    };
+   }else s.body.pop();
+  }
+
+  clear();
+  rect(food.x,food.y,cell,cell,"#ffe600");
+  s1.body.forEach((b,i)=>rect(b.x,b.y,cell-2,cell-2,i?"#00bb66":"#00ff88"));
+  s2.body.forEach((b,i)=>rect(b.x,b.y,cell-2,cell-2,i?"#009dcc":"#00eaff"));
+  text("P1",20,35,16,"#00ff88");
+  text("P2",canvas.width-20,35,16,"#00eaff","right");
+ },80);
+}
+
+/* =========================================================
+   2. PONG
+========================================================= */
+
+function initPong(){
+ instruction("P1 W/S | P2 ↑/↓");
+ let p1={y:230,score:0};
+ let p2={y:230,score:0};
+ let ball={x:450,y:280,vx:6,vy:random(-4,4)};
+ let over=false;
+
+ gameLoop=setInterval(()=>{
+  if(over)return;
+
+  if(keys.w)p1.y-=7;
+  if(keys.s)p1.y+=7;
+  if(keys.arrowup)p2.y-=7;
+  if(keys.arrowdown)p2.y+=7;
+
+  p1.y=Math.max(0,Math.min(460,p1.y));
+  p2.y=Math.max(0,Math.min(460,p2.y));
+
+  ball.x+=ball.vx;
+  ball.y+=ball.vy;
+
+  if(ball.y<8||ball.y>552)ball.vy*=-1;
+
+  if(ball.x<45&&ball.y>p1.y&&ball.y<p1.y+100){
+   ball.vx=Math.abs(ball.vx)*1.04;
+   ball.vy+=(ball.y-(p1.y+50))*.06;
+  }
+
+  if(ball.x>855&&ball.y>p2.y&&ball.y<p2.y+100){
+   ball.vx=-Math.abs(ball.vx)*1.04;
+   ball.vy+=(ball.y-(p2.y+50))*.06;
+  }
+
+  if(ball.x<0){
+   p2.score++;resetBall();
+  }
+  if(ball.x>900){
+   p1.score++;resetBall();
+  }
+
+  if(p1.score>=5||p2.score>=5){
+   over=true;
+   win(p1.score>p2.score?"P1":"P2");
+  }
+
+  clear();
+  rect(20,p1.y,15,100,"#00ff88");
+  rect(865,p2.y,15,100,"#00eaff");
+  circle(ball.x,ball.y,9,"#fff");
+  for(let y=0;y<560;y+=30)rect(448,y,4,15,"#26343d");
+  text(p1.score,380,70,45,"#00ff88","center");
+  text(p2.score,520,70,45,"#00eaff","center");
+
+  function resetBall(){
+   ball.x=450;ball.y=280;
+   ball.vx=(Math.random()>.5?6:-6);
+   ball.vy=random(-4,4);
+  }
+ },16);
+}
+
+/* =========================================================
+   3. DODGE
+========================================================= */
+
+function initDodge(){
+ instruction("P1 A/D | P2 ←/→ | Avoid red blocks");
+ let p1={x:200,y:500};
+ let p2={x:680,y:500};
+ let obs=[];
+ let t=0;
+ let alive=[true,true];
+
+ gameLoop=setInterval(()=>{
+  if(keys.a)p1.x-=7;
+  if(keys.d)p1.x+=7;
+  if(keys.arrowleft)p2.x-=7;
+  if(keys.arrowright)p2.x+=7;
+
+  p1.x=Math.max(20,Math.min(860,p1.x));
+  p2.x=Math.max(20,Math.min(860,p2.x));
+
+  t++;
+  if(t%35===0)
+   obs.push({x:random(20,840),y:-30,w:random(25,70),h:25,v:random(3,7)});
+
+  obs.forEach(o=>o.y+=o.v);
+
+  obs=obs.filter(o=>o.y<600);
+
+  obs.forEach(o=>{
+   if(alive[0]&&Math.abs(p1.x-o.x-o.w/2)<35&&o.y>460&&o.y<540)
+    alive[0]=false;
+   if(alive[1]&&Math.abs(p2.x-o.x-o.w/2)<35&&o.y>460&&o.y<540)
+    alive[1]=false;
+  });
+
+  if(!alive[0]&&!alive[1]){win("P2");return;}
+  if(!alive[0]){win("P2");return;}
+  if(!alive[1]){win("P1");return;}
+
+  clear();
+  rect(p1.x-20,p1.y-20,40,40,"#00ff88");
+  rect(p2.x-20,p2.y-20,40,40,"#00eaff");
+  obs.forEach(o=>rect(o.x,o.y,o.w,o.h,"#ff3158"));
+ },16);
+}
+
+/* =========================================================
+   4. COIN COLLECTOR
+========================================================= */
+
+function initCoin(){
+ instruction("P1 WASD | P2 ARROWS | Collect yellow coins");
+ let p1={x:150,y:280,score:0};
+ let p2={x:750,y:280,score:0};
+ let coins=[];
+ let time=0;
+
+ for(let i=0;i<12;i++)
+  coins.push({x:random(30,870),y:random(50,510)});
+
+ gameLoop=setInterval(()=>{
+  if(keys.w)p1.y-=5;if(keys.s)p1.y+=5;
+  if(keys.a)p1.x-=5;if(keys.d)p1.x+=5;
+  if(keys.arrowup)p2.y-=5;if(keys.arrowdown)p2.y+=5;
+  if(keys.arrowleft)p2.x-=5;if(keys.arrowright)p2.x+=5;
+
+  p1.x=Math.max(15,Math.min(885,p1.x));
+  p1.y=Math.max(40,Math.min(540,p1.y));
+  p2.x=Math.max(15,Math.min(885,p2.x));
+  p2.y=Math.max(40,Math.min(540,p2.y));
+
+  coins.forEach(c=>{
+   if(Math.hypot(p1.x-c.x,p1.y-c.y)<25){p1.score++;move(c)}
+   if(Math.hypot(p2.x-c.x,p2.y-c.y)<25){p2.score++;move(c)}
+  });
+
+  time++;
+  if(p1.score>=10||p2.score>=10){
+   win(p1.score>p2.score?"P1":"P2");return;
+  }
+
+  clear();
+  coins.forEach(c=>circle(c.x,c.y,9,"#ffe600"));
+  circle(p1.x,p1.y,18,"#00ff88");
+  circle(p2.x,p2.y,18,"#00eaff");
+  text("P1 "+p1.score,25,35,20,"#00ff88");
+  text("P2 "+p2.score,875,35,20,"#00eaff","right");
+
+  function move(c){
+   c.x=random(30,870);c.y=random(60,520);
+  }
+ },16);
+}
+
+/* =========================================================
+   5. SPACE DUEL
+========================================================= */
+
+function initSpace(){
+ instruction("P1 WASD + F | P2 ARROWS + /");
+ let p1={x:150,y:280,hp:5,bullets:[]};
+ let p2={x:750,y:280,hp:5,bullets:[]};
+ let cooldown=[0,0];
+
+ gameLoop=setInterval(()=>{
+  if(keys.w)p1.y-=5;if(keys.s)p1.y+=5;
+  if(keys.a)p1.x-=5;if(keys.d)p1.x+=5;
+  if(keys.arrowup)p2.y-=5;if(keys.arrowdown)p2.y+=5;
+  if(keys.arrowleft)p2.x-=5;if(keys.arrowright)p2.x+=5;
+
+  p1.y=Math.max(30,Math.min(530,p1.y));
+  p2.y=Math.max(30,Math.min(530,p2.y));
+
+  cooldown[0]--;cooldown[1]--;
+
+  if(keys.f&&cooldown[0]<=0){
+   p1.bullets.push({x:p1.x+20,y:p1.y,vx:9,owner:1});
+   cooldown[0]=15;
+  }
+  if(keys["/"]&&cooldown[1]<=0){
+   p2.bullets.push({x:p2.x-20,y:p2.y,vx:-9,owner:2});
+   cooldown[1]=15;
+  }
+
+  [p1,p2].forEach(p=>p.bullets.forEach(b=>b.x+=b.vx));
+
+  p1.bullets=p1.bullets.filter(b=>{
+   if(Math.abs(b.x-p2.x)<22&&Math.abs(b.y-p2.y)<25){
+    p2.hp--;return false;
+   }
+   return b.x<930&&b.x>-30;
+  });
+
+  p2.bullets=p2.bullets.filter(b=>{
+   if(Math.abs(b.x-p1.x)<22&&Math.abs(b.y-p1.y)<25){
+    p1.hp--;return false;
+   }
+   return b.x<930&&b.x>-30;
+  });
+
+  if(p1.hp<=0){win("P2");return;}
+  if(p2.hp<=0){win("P1");return;}
+
+  clear();
+  circle(p1.x,p1.y,22,"#00ff88");
+  circle(p2.x,p2.y,22,"#00eaff");
+  p1.bullets.forEach(b=>rect(b.x,b.y-2,16,4,"#00ff88"));
+  p2.bullets.forEach(b=>rect(b.x,b.y-2,16,4,"#00eaff"));
+  text("P1 HP "+p1.hp,25,35,20,"#00ff88");
+  text("P2 HP "+p2.hp,875,35,20,"#00eaff","right");
+ },16);
+}
+
+/* =========================================================
+   6. TANK BATTLE
+========================================================= */
+
+function initTank(){
+ instruction("P1 WASD + F | P2 ARROWS + /");
+ let p1={x:140,y:280,a:0,hp:5,shots:[]};
+ let p2={x:760,y:280,a:Math.PI,hp:5,shots:[]};
+ let cd=[0,0];
+
+ gameLoop=setInterval(()=>{
+  moveTank(p1,0);
+  moveTank(p2,1);
+  cd[0]--;cd[1]--;
+
+  if(keys.f&&cd[0]<=0){
+   p1.shots.push({x:p1.x,y:p1.y,vx:Math.cos(p1.a)*8,vy:Math.sin(p1.a)*8,o:1});
+   cd[0]=25;
+  }
+  if(keys["/"]&&cd[1]<=0){
+   p2.shots.push({x:p2.x,y:p2.y,vx:Math.cos(p2.a)*8,vy:Math.sin(p2.a)*8,o:2});
+   cd[1]=25;
+  }
+
+  [p1,p2].forEach(p=>p.shots.forEach(s=>{
+   s.x+=s.vx;s.y+=s.vy;
+  }));
+
+  p1.shots=p1.shots.filter(s=>{
+   if(Math.hypot(s.x-p2.x,s.y-p2.y)<28){
+    p2.hp--;return false;
+   }
+   return s.x>0&&s.x<900&&s.y>0&&s.y<560;
+  });
+
+  p2.shots=p2.shots.filter(s=>{
+   if(Math.hypot(s.x-p1.x,s.y-p1.y)<28){
+    p1.hp--;return false;
+   }
+   return s.x>0&&s.x<900&&s.y>0&&s.y<560;
+  });
+
+  if(p1.hp<=0){win("P2");return}
+  if(p2.hp<=0){win("P1");return}
+
+  clear();
+  drawTank(p1,"#00ff88");
+  drawTank(p2,"#00eaff");
+  p1.shots.forEach(s=>circle(s.x,s.y,5,"#fff"));
+  p2.shots.forEach(s=>circle(s.x,s.y,5,"#fff"));
+  text("P1 "+p1.hp,25,35,20,"#00ff88");
+  text("P2 "+p2.hp,875,35,20,"#00eaff","right");
+
+  function moveTank(p,n){
+   let up=n?keys.arrowup:keys.w;
+   let down=n?keys.arrowdown:keys.s;
+   let left=n?keys.arrowleft:keys.a;
+   let right=n?keys.arrowright:keys.d;
+   if(up){p.x+=Math.cos(p.a)*3;p.y+=Math.sin(p.a)*3}
+   if(down){p.x-=Math.cos(p.a)*2;p.y-=Math.sin(p.a)*2}
+   if(left)p.a-=.05;
+   if(right)p.a+=.05;
+   p.x=Math.max(25,Math.min(875,p.x));
+   p.y=Math.max(50,Math.min(535,p.y));
+  }
+
+  function drawTank(p,c){
+   ctx.save();
+   ctx.translate(p.x,p.y);
+   ctx.rotate(p.a);
+   rect(-20,-15,40,30,c);
+   rect(0,-4,30,8,c);
+   ctx.restore();
+  }
+ },16);
+}
+
+/* =========================================================
+   7. FOOTBALL
+========================================================= */
+
+function initFootball(){
+ instruction("P1 WASD | P2 ARROWS | Push ball into opponent goal");
+ let p1={x:250,y:280};
+ let p2={x:650,y:280};
+ let ball={x:450,y:280,vx:0,vy:0};
+ let score=[0,0];
+
+ gameLoop=setInterval(()=>{
+  move(p1,keys.w,keys.s,keys.a,keys.d);
+  move(p2,keys.arrowup,keys.arrowdown,keys.arrowleft,keys.arrowright);
+
+  let d1=Math.hypot(p1.x-ball.x,p1.y-ball.y);
+  let d2=Math.hypot(p2.x-ball.x,p2.y-ball.y);
+
+  if(d1<35){
+   ball.vx+=(ball.x-p1.x)*.08;
+   ball.vy+=(ball.y-p1.y)*.08;
+  }
+  if(d2<35){
+   ball.vx+=(ball.x-p2.x)*.08;
+   ball.vy+=(ball.y-p2.y)*.08;
+  }
+
+  ball.x+=ball.vx;ball.y+=ball.vy;
+  ball.vx*=.985;ball.vy*=.985;
+
+  if(ball.y<20||ball.y>540)ball.vy*=-1;
+
+  if(ball.x<0){
+   score[1]++;
+   reset();
+  }
+  if(ball.x>900){
+   score[0]++;
+   reset();
+  }
+
+  if(score[0]>=5||score[1]>=5){
+   win(score[0]>score[1]?"P1":"P2");return;
+  }
+
+  clear();
+  rect(0,190,20,180,"#00eaff");
+  rect(880,190,20,180,"#00ff88");
+  ctx.strokeStyle="#26343d";
+  ctx.strokeRect(20,20,860,520);
+  circle(ball.x,ball.y,13,"#fff");
+  circle(p1.x,p1.y,23,"#00ff88");
+  circle(p2.x,p2.y,23,"#00eaff");
+  text(score[0],410,55,35,"#00ff88","center");
+  text(score[1],490,55,35,"#00eaff","center");
+
+  function move(p,u,d,l,r){
+   if(u)p.y-=4;if(d)p.y+=4;if(l)p.x-=4;if(r)p.x+=4;
+   p.x=Math.max(30,Math.min(870,p.x));
+   p.y=Math.max(35,Math.min(525,p.y));
+  }
+  function reset(){
+   ball.x=450;ball.y=280;ball.vx=0;ball.vy=0;
+  }
+ },16);
+}
+
+/* =========================================================
+   8. CAR DODGE
+========================================================= */
+
+function initCar(){
+ instruction("P1 A/D | P2 ←/→ | Avoid traffic");
+ let p1={x:250,y:470};
+ let p2={x:650,y:470};
+ let cars=[];
+ let t=0;
+ let score=[0,0];
+
+ gameLoop=setInterval(()=>{
+  if(keys.a)p1.x-=6;if(keys.d)p1.x+=6;
+  if(keys.arrowleft)p2.x-=6;if(keys.arrowright)p2.x+=6;
+
+  p1.x=Math.max(170,Math.min(350,p1.x));
+  p2.x=Math.max(550,Math.min(730,p2.x));
+
+  t++;
+  if(t%25===0)
+   cars.push({x:random(170,730),y:-60,w:35,h:60,v:random(4,8)});
+
+  cars.forEach(c=>c.y+=c.v);
+
+  let hit1=cars.some(c=>c.y+60>p1.y&&c.y<p1.y+45&&Math.abs(c.x-p1.x)<35);
+  let hit2=cars.some(c=>c.y+60>p2.y&&c.y<p2.y+45&&Math.abs(c.x-p2.x)<35);
+
+  if(hit1)score[1]++;
+  if(hit2)score[0]++;
+
+  if(hit1||hit2)cars=cars.filter(c=>!(c.y+60>450&&c.y<530));
+
+  if(score[0]>=3||score[1]>=3){
+   win(score[0]>score[1]?"P1":"P2");return;
+  }
+
+  clear();
+  rect(140,0,620,560,"#11181e");
+  for(let y=0;y<560;y+=50)rect(445,y,8,25,"#555f66");
+  rect(p1.x-18,p1.y,36,55,"#00ff88");
+  rect(p2.x-18,p2.y,36,55,"#00eaff");
+  cars.forEach(c=>rect(c.x,c.y,c.w,c.h,"#ff3158"));
+  text("P1 "+score[0],150,35,20,"#00ff88");
+  text("P2 "+score[1],750,35,20,"#00eaff","right");
+ },16);
+}
+
+/* =========================================================
+   9. RACING DUEL
+========================================================= */
+
+function initRace(){
+ instruction("P1 A/D | P2 ←/→ | Reach 100%");
+ let p1={x:250,progress:0};
+ let p2={x:650,progress:0};
+
+ gameLoop=setInterval(()=>{
+  if(keys.a)p1.x-=4;if(keys.d)p1.x+=4;
+  if(keys.arrowleft)p2.x-=4;if(keys.arrowright)p2.x+=4;
+
+  p1.x=Math.max(160,Math.min(340,p1.x));
+  p2.x=Math.max(560,Math.min(740,p2.x));
+
+  if(keys.a||keys.d)p1.progress+=.35;
+  if(keys.arrowleft||keys.arrowright)p2.progress+=.35;
+
+  if(p1.progress>=100||p2.progress>=100){
+   win(p1.progress>p2.progress?"P1":"P2");return;
+  }
+
+  clear();
+  rect(140,60,220,440,"#101820");
+  rect(540,60,220,440,"#101820");
+  rect(350,60,200,440,"#080b0e");
+
+  rect(170,480-p1.progress*3.9,160,25,"#00ff88");
+  rect(570,480-p2.progress*3.9,160,25,"#00eaff");
+
+  text(Math.floor(p1.progress)+"%",250,530,22,"#00ff88","center");
+  text(Math.floor(p2.progress)+"%",650,530,22,"#00eaff","center");
+  text("FINISH",450,75,18,"#fff","center");
+ },16);
+}
+
+/* =========================================================
+   10. TARGET DUEL
+========================================================= */
+
+function initTarget(){
+ instruction("P1 F | P2 / | Hit 10 targets");
+ let target={x:450,y:280};
+ let score=[0,0];
+ let cd=[0,0];
+
+ gameLoop=setInterval(()=>{
+  cd[0]--;cd[1]--;
+
+  if(keys.f&&cd[0]<=0){
+   score[0]++;
+   newTarget();
+   cd[0]=18;
+  }
+  if(keys["/"]&&cd[1]<=0){
+   score[1]++;
+   newTarget();
+   cd[1]=18;
+  }
+
+  if(score[0]>=10||score[1]>=10){
+   win(score[0]>score[1]?"P1":"P2");return;
+  }
+
+  clear();
+  circle(target.x,target.y,35,"#ff3158");
+  circle(target.x,target.y,22,"#ffe600");
+  circle(target.x,target.y,8,"#05080b");
+  text(score[0],250,70,40,"#00ff88","center");
+  text(score[1],650,70,40,"#00eaff","center");
+
+  function newTarget(){
+   target.x=random(80,820);
+   target.y=random(120,500);
+  }
+ },16);
+}
+
+/* =========================================================
+   11. JUMP BATTLE
+========================================================= */
+
+function initJump(){
+ instruction("P1 W | P2 ↑ | Jump over obstacles");
+ let p1={x:200,y:450,vy:0};
+ let p2={x:700,y:450,vy:0};
+ let obs=[];
+ let t=0;
+
+ gameLoop=setInterval(()=>{
+  if(keys.w&&p1.y>=450)p1.vy=-13;
+  if(keys.arrowup&&p2.y>=450)p2.vy=-13;
+
+  p1.vy+=.55;p2.vy+=.55;
+  p1.y+=p1.vy;p2.y+=p2.vy;
+
+  if(p1.y>450){p1.y=450;p1.vy=0}
+  if(p2.y>450){p2.y=450;p2.vy=0}
+
+  t++;
+  if(t%45===0)
+   obs.push({x:random(20,850),y:425,w:25,h:25,v:5});
+
+  obs.forEach(o=>o.x-=o.v);
+  obs=obs.filter(o=>o.x>-50);
+
+  let h1=obs.some(o=>Math.abs(o.x-p1.x)<25&&p1.y>400);
+  let h2=obs.some(o=>Math.abs(o.x-p2.x)<25&&p2.y>400);
+
+  if(h1){win("P2");return}
+  if(h2){win("P1");return}
+
+  clear();
+  rect(0,480,900,3,"#26343d");
+  circle(p1.x,p1.y,20,"#00ff88");
+  circle(p2.x,p2.y,20,"#00eaff");
+  obs.forEach(o=>rect(o.x,o.y,o.w,o.h,"#ff3158"));
+ },16);
+}
+
+/* =========================================================
+   12. BALLOON POP
+========================================================= */
+
+function initBalloon(){
+ instruction("P1 F | P2 / | Pop your color");
+ let balloons=[];
+ let score=[0,0];
+
+ for(let i=0;i<20;i++)
+  balloons.push({
+   x:random(40,860),
+   y:random(100,500),
+   owner:Math.random()>.5?1:2
+  });
+
+ gameLoop=setInterval(()=>{
+  if(keys.f){
+   let i=balloons.findIndex(b=>b.owner===1);
+   if(i>=0){balloons.splice(i,1);score[0]++}
+   keys.f=false;
+  }
+
+  if(keys["/"]){
+   let i=balloons.findIndex(b=>b.owner===2);
+   if(i>=0){balloons.splice(i,1);score[1]++}
+   keys["/"]=false;
+  }
+
+  if(balloons.length===0){
+   win(score[0]>score[1]?"P1":"P2");return;
+  }
+
+  clear();
+  balloons.forEach(b=>circle(b.x,b.y,25,b.owner===1?"#00ff88":"#00eaff"));
+  text("P1 "+score[0],25,35,20,"#00ff88");
+  text("P2 "+score[1],875,35,20,"#00eaff","right");
+ },30);
+}
+
+/* =========================================================
+   13. BOX PUSH
+========================================================= */
+
+function initBox(){
+ instruction("P1 WASD | P2 ARROWS | Push the box to your side");
+ let box={x:450,y:280};
+ let p1={x:250,y:280};
+ let p2={x:650,y:280};
+
+ gameLoop=setInterval(()=>{
+  move(p1,keys.w,keys.s,keys.a,keys.d);
+  move(p2,keys.arrowup,keys.arrowdown,keys.arrowleft,keys.arrowright);
+
+  push(p1);push(p2);
+
+  if(box.x<80){win("P1");return}
+  if(box.x>820){win("P2");return}
+
+  clear();
+  rect(50,220,40,120,"#00ff88");
+  rect(810,220,40,120,"#00eaff");
+  rect(box.x-25,box.y-25,50,50,"#ffe600");
+  circle(p1.x,p1.y,20,"#00ff88");
+  circle(p2.x,p2.y,20,"#00eaff");
+
+  function move(p,u,d,l,r){
+   if(u)p.y-=4;if(d)p.y+=4;if(l)p.x-=4;if(r)p.x+=4;
+   p.x=Math.max(20,Math.min(880,p.x));
+   p.y=Math.max(60,Math.min(520,p.y));
+  }
+  function push(p){
+   if(Math.hypot(p.x-box.x,p.y-box.y)<45){
+    box.x+=(box.x-p.x)*.035;
+    box.y+=(box.y-p.y)*.035;
+   }
+  }
+ },16);
+}
+
+/* =========================================================
+   14. GRAVITY DUEL
+========================================================= */
+
+function initGravity(){
+ instruction("P1 WASD | P2 ARROWS | Collect stars");
+ let p1={x:220,y:280,vx:0,vy:0,s:0};
+ let p2={x:680,y:280,vx:0,vy:0,s:0};
+ let star={x:450,y:280};
+
+ gameLoop=setInterval(()=>{
+  control(p1,keys.w,keys.s,keys.a,keys.d);
+  control(p2,keys.arrowup,keys.arrowdown,keys.arrowleft,keys.arrowright);
+
+  p1.x+=p1.vx;p1.y+=p1.vy;
+  p2.x+=p2.vx;p2.y+=p2.vy;
+
+  bounce(p1);bounce(p2);
+
+  if(Math.hypot(p1.x-star.x,p1.y-star.y)<25){p1.s++;newStar()}
+  if(Math.hypot(p2.x-star.x,p2.y-star.y)<25){p2.s++;newStar()}
+
+  if(p1.s>=8||p2.s>=8){
+   win(p1.s>p2.s?"P1":"P2");return;
+  }
+
+  clear();
+  circle(star.x,star.y,10,"#ffe600");
+  circle(p1.x,p1.y,20,"#00ff88");
+  circle(p2.x,p2.y,20,"#00eaff");
+  text(p1.s,250,50,35,"#00ff88","center");
+  text(p2.s,650,50,35,"#00eaff","center");
+
+  function control(p,u,d,l,r){
+   if(u)p.vy-=.25;if(d)p.vy+=.25;
+   if(l)p.vx-=.25;if(r)p.vx+=.25;
+   p.vx*=.99;p.vy*=.99;
+  }
+  function bounce(p){
+   if(p.x<20||p.x>880)p.vx*=-1;
+   if(p.y<60||p.y>540)p.vy*=-1;
+   p.x=Math.max(20,Math.min(880,p.x));
+   p.y=Math.max(60,Math.min(540,p.y));
+  }
+  function newStar(){
+   star.x=random(50,850);star.y=random(80,500);
+  }
+ },16);
+}
+
+/* =========================================================
+   15. SURVIVAL
+========================================================= */
+
+function initSurvival(){
+ instruction("P1 WASD | P2 ARROWS | Survive the red enemies");
+ let p1={x:250,y:280,hp:100};
+ let p2={x:650,y:280,hp:100};
+ let enemies=[];
+ let t=0;
+
+ gameLoop=setInterval(()=>{
+  move(p1,keys.w,keys.s,keys.a,keys.d);
+  move(p2,keys.arrowup,keys.arrowdown,keys.arrowleft,keys.arrowright);
+
+  t++;
+  if(t%45===0)
+   enemies.push({
+    x:random(30,870),
+    y:random(70,530),
+    v:random(.7,1.5)
+   });
+
+  enemies.forEach(e=>{
+   [p1,p2].forEach(p=>{
+    let dx=p.x-e.x,dy=p.y-e.y;
+    let d=Math.hypot(dx,dy)||1;
+    e.x+=dx/d*e.v;
+    e.y+=dy/d*e.v;
+    if(d<28)p.hp-=.4;
+   });
+  });
+
+  if(p1.hp<=0){win("P2");return}
+  if(p2.hp<=0){win("P1");return}
+
+  clear();
+  enemies.forEach(e=>circle(e.x,e.y,13,"#ff3158"));
+  circle(p1.x,p1.y,22,"#00ff88");
+  circle(p2.x,p2.y,22,"#00eaff");
+  text("P1 "+Math.ceil(p1.hp),25,35,20,"#00ff88");
+  text("P2 "+Math.ceil(p2.hp),875,35,20,"#00eaff","right");
+
+  function move(p,u,d,l,r){
+   if(u)p.y-=4;if(d)p.y+=4;if(l)p.x-=4;if(r)p.x+=4;
+   p.x=Math.max(20,Math.min(880,p.x));
+   p.y=Math.max(60,Math.min(540,p.y));
+  }
+ },16);
+}
+
+/* =========================================================
+   16. BOMB DODGE
+========================================================= */
+
+function initBomb(){
+ instruction("P1 A/D | P2 ←/→ | Dodge explosions");
+ let p1={x:220,y:470};
+ let p2={x:680,y:470};
+ let bombs=[];
+ let t=0;
+
+ gameLoop=setInterval(()=>{
+  if(keys.a)p1.x-=6;if(keys.d)p1.x+=6;
+  if(keys.arrowleft)p2.x-=6;if(keys.arrowright)p2.x+=6;
+
+  p1.x=Math.max(30,Math.min(870,p1.x));
+  p2.x=Math.max(30,Math.min(870,p2.x));
+
+  t++;
+  if(t%35===0)
+   bombs.push({
+    x:random(30,870),
+    y:random(80,400),
+    r:12,
+    timer:90
+   });
+
+  bombs.forEach(b=>b.timer--);
+
+  bombs.forEach(b=>{
+   if(b.timer<0)b.explode=true;
+  });
+
+  let dead1=bombs.some(b=>b.explode&&Math.hypot(p1.x-b.x,p1.y-b.y)<80);
+  let dead2=bombs.some(b=>b.explode&&Math.hypot(p2.x-b.x,p2.y-b.y)<80);
+
+  if(dead1){win("P2");return}
+  if(dead2){win("P1");return}
+
+  bombs=bombs.filter(b=>b.timer>-35);
+
+  clear();
+  bombs.forEach(b=>{
+   circle(b.x,b.y,b.explode?70:12,b.explode?"#ff3158":"#ffe600");
+  });
+  circle(p1.x,p1.y,20,"#00ff88");
+  circle(p2.x,p2.y,20,"#00eaff");
+ },16);
+}
+
+/* =========================================================
+   17. ARCHERY
+========================================================= */
+
+function initArchery(){
+ instruction("P1 W/S + F | P2 ↑/↓ + /");
+ let p1={y:280,angle:0,score:0};
+ let p2={y:280,angle:0,score:0};
+ let target={x:750,y:280};
+ let arrows=[];
+
+ gameLoop=setInterval(()=>{
+  if(keys.w)p1.angle-=.025;
+  if(keys.s)p1.angle+=.025;
+  if(keys.arrowup)p2.angle-=.025;
+  if(keys.arrowdown)p2.angle+=.025;
+
+  if(keys.f&&!gameState.f){
+   arrows.push({x:150,y:p1.y,vx:8,vy:Math.sin(p1.angle)*8,o:1});
+  }
+  if(keys["/"]&&!gameState.sl){
+   arrows.push({x:750,y:p2.y,vx:-8,vy:Math.sin(p2.angle)*8,o:2});
+  }
+
+  gameState.f=keys.f;
+  gameState.sl=keys["/"];
+
+  arrows.forEach(a=>{
+   a.x+=a.vx;a.y+=a.vy;
+  });
+
+  arrows=arrows.filter(a=>{
+   if(Math.hypot(a.x-target.x,a.y-target.y)<30){
+    a.o===1?p1.score++:p2.score++;
+    target.y=random(100,480);
+    return false;
+   }
+   return a.x>0&&a.x<900&&a.y>0&&a.y<560;
+  });
+
+  if(p1.score>=5||p2.score>=5){
+   win(p1.score>p2.score?"P1":"P2");return;
+  }
+
+  clear();
+  rect(120,p1.y-3,30,6,"#00ff88");
+  rect(750,p2.y-3,30,6,"#00eaff");
+  circle(target.x,target.y,30,"#ff3158");
+  circle(target.x,target.y,18,"#ffe600");
+  circle(target.x,target.y,6,"#05080b");
+  arrows.forEach(a=>rect(a.x,a.y,18,3,"#fff"));
+  text(p1.score,250,55,35,"#00ff88","center");
+  text(p2.score,650,55,35,"#00eaff","center");
+ },16);
+}
+
+/* =========================================================
+   18. FALLING BLOCKS
+========================================================= */
+
+function initBlocks(){
+ instruction("P1 A/D | P2 ←/→ | Catch falling blocks");
+ let p1={x:200,score:0};
+ let p2={x:700,score:0};
+ let blocks=[];
+ let t=0;
+
+ gameLoop=setInterval(()=>{
+  if(keys.a)p1.x-=6;if(keys.d)p1.x+=6;
+  if(keys.arrowleft)p2.x-=6;if(keys.arrowright)p2.x+=6;
+
+  p1.x=Math.max(30,Math.min(350,p1.x));
+  p2.x=Math.max(550,Math.min(850,p2.x));
+
+  t++;
+  if(t%30===0)
+   blocks.push({x:random(30,850),y:-20,v:random(3,7)});
+
+  blocks.forEach(b=>b.y+=b.v);
+
+  blocks=blocks.filter(b=>{
+   if(b.y>480){
+    if(Math.abs(b.x-p1.x)<35)p1.score++;
+    if(Math.abs(b.x-p2.x)<35)p2.score++;
+    return false;
+   }
+   return true;
+  });
+
+  if(p1.score>=15||p2.score>=15){
+   win(p1.score>p2.score?"P1":"P2");return;
+  }
+
+  clear();
+  rect(p1.x-35,500,70,15,"#00ff88");
+  rect(p2.x-35,500,70,15,"#00eaff");
+  blocks.forEach(b=>rect(b.x-10,b.y-10,20,20,"#ffe600"));
+  text(p1.score,200,40,30,"#00ff88","center");
+  text(p2.score,700,40,30,"#00eaff","center");
+ },16);
+}
+
+/* =========================================================
+   TIC TAC TOE
+========================================================= */
+
+function initTTT(){
+ canvas.style.display="none";
+ instruction("P1 = X | P2 = O | Take 3 in a row");
+
+ const area=$("gameArea");
+ area.innerHTML=`
+ <div class="domGame">
+  <div class="centerBox">
+   <div class="scoreHuge" id="tttStatus">P1 TURN</div>
+   <div class="bigBoard tttBoard" id="tttBoard"></div>
+  </div>
+ </div>`;
+
+ let board=Array(9).fill("");
+ let turn="X";
+ const b=$("tttBoard");
+
+ b.innerHTML=board.map((_,i)=>`<div class="cell" onclick="tttMove(${i})"></div>`).join("");
+
+ gameState.ttt={board,turn};
+
+ window.tttMove=function(i){
+  if(board[i]||gameState.ttt.over)return;
+
+  board[i]=turn;
+  b.children[i].textContent=turn;
+  b.children[i].style.color=turn==="X"?"#00ff88":"#00eaff";
+
+  let result=checkTTT(board);
+  if(result){
+   gameState.ttt.over=true;
+   if(result==="draw")tie();
+   else win(result==="X"?"P1":"P2");
+   $("tttStatus").textContent=result==="draw"?"DRAW":result==="X"?"P1 WINS":"P2 WINS";
+   return;
+  }
+
+  turn=turn==="X"?"O":"X";
+  $("tttStatus").textContent=turn==="X"?"P1 TURN":"P2 TURN";
+ };
+
+ function checkTTT(b){
+  const lines=[
+   [0,1,2],[3,4,5],[6,7,8],
+   [0,3,6],[1,4,7],[2,5,8],
+   [0,4,8],[2,4,6]
+  ];
+  for(const l of lines)
+   if(b[l[0]]&&b[l[0]]===b[l[1]]&&b[l[1]]===b[l[2]])
+    return b[l[0]];
+  if(b.every(Boolean))return"draw";
+  return null;
+ }
+}
+
+/* =========================================================
+   REACTION DUEL
+========================================================= */
+
+function initReaction(){
+ canvas.style.display="none";
+ instruction("Wait for GREEN. Then press your key first.");
+
+ const area=$("gameArea");
+ area.innerHTML=`
+ <div class="domGame">
+  <div class="centerBox">
+   <div class="bigText" id="reactionText">WAIT...</div>
+   <button class="btn green" id="startReaction">START</button>
+  </div>
+ </div>`;
+
+ $("startReaction").onclick=()=>{
+  $("startReaction").disabled=true;
+  $("reactionText").textContent="GET READY...";
+  $("reactionText").style.color="#fff";
+
+  let delay=random(1500,4000);
+
+  gameState.reactionReady=false;
+
+  setTimeout(()=>{
+   gameState.reactionReady=true;
+   $("reactionText").textContent="GO!";
+   $("reactionText").style.color="#00ff88";
+  },delay);
+ };
+
+ window.addEventListener("keydown",reactionKey);
+
+ function reactionKey(e){
+  if(!gameState.reactionReady)return;
+  if(e.key.toLowerCase()==="f"){
+   gameState.reactionReady=false;
+   win("P1");
+   window.removeEventListener("keydown",reactionKey);
+  }
+  if(e.key==="/"){
+   gameState.reactionReady=false;
+   win("P2");
+   window.removeEventListener("keydown",reactionKey);
+  }
+ }
+}
+
+/* =========================================================
+   RPS
+========================================================= */
+
+function initRPS(){
+ canvas.style.display="none";
+ instruction("P1 chooses first, then P2");
+
+ const area=$("gameArea");
+ area.innerHTML=`
+ <div class="domGame">
+  <div class="centerBox">
+   <div class="scoreHuge" id="rpsStatus">P1 CHOOSE</div>
+   <div class="choiceRow">
+    <button class="choice" onclick="rps(0)">✊</button>
+    <button class="choice" onclick="rps(1)">✋</button>
+    <button class="choice" onclick="rps(2)">✌️</button>
+   </div>
+  </div>
+ </div>`;
+
+ gameState.rps={p1:null,p2:null};
+
+ window.rps=function(n){
+  if(gameState.rps.p1===null){
+   gameState.rps.p1=n;
+   $("rpsStatus").textContent="P2 CHOOSE";
+  }else if(gameState.rps.p2===null){
+   gameState.rps.p2=n;
+
+   let a=gameState.rps.p1,b=n;
+
+   if(a===b){
+    $("rpsStatus").textContent="DRAW";
+    tie();
+   }else if((a-b+3)%3===1){
+    $("rpsStatus").textContent="P1 WINS";
+    win("P1");
+   }else{
+    $("rpsStatus").textContent="P2 WINS";
+    win("P2");
+   }
+  }
+ };
+}
+
+/* =========================================================
+   TAP RACE
+========================================================= */
+
+function initTap(){
+ canvas.style.display="none";
+ instruction("P1 F | P2 / | First to 50 taps");
+
+ const area=$("gameArea");
+ area.innerHTML=`
+ <div class="domGame">
+  <div class="centerBox">
+   <div class="scoreHuge">
+    <span id="tap1" style="color:#00ff88">0</span>
+    -
+    <span id="tap2" style="color:#00eaff">0</span>
+   </div>
+   <div class="choiceRow">
+    <button class="choice" onclick="tap(1)">P1<br>🔥 TAP</button>
+    <button class="choice" onclick="tap(2)">P2<br>🔥 TAP</button>
+   </div>
+  </div>
+ </div>`;
+
+ gameState.tap={a:0,b:0};
+
+ window.tap=function(p){
+  if(p===1)gameState.tap.a++;
+  else gameState.tap.b++;
+
+  $("tap1").textContent=gameState.tap.a;
+  $("tap2").textContent=gameState.tap.b;
+
+  if(gameState.tap.a>=50)win("P1");
+  if(gameState.tap.b>=50)win("P2");
+ };
+}
+
+/* =========================================================
+   MEMORY
+========================================================= */
+
+function initMemory(){
+ canvas.style.display="none";
+ instruction("Click matching pairs. Player with most pairs wins.");
+
+ const area=$("gameArea");
+ area.innerHTML=`
+ <div class="domGame">
+  <div class="centerBox">
+   <div class="scoreHuge" id="memoryStatus">P1 TURN</div>
+   <div id="memoryBoard" style="
+    display:grid;
+    grid-template-columns:repeat(4,80px);
+    gap:8px;
+    justify-content:center;
+   "></div>
+  </div>
+ </div>`;
+
+ let values=["🍎","🍎","🚀","🚀","🎮","🎮","👾","👾",
+             "🔥","🔥","⚡","⚡","🐍","🐍","💎","💎"];
+ values.sort(()=>Math.random()-.5);
+
+ gameState.memory={
+  values,
+  open:[],
+  matched:[],
+  turn:1,
+  scores:[0,0]
+ };
+
+ const board=$("memoryBoard");
+
+ values.forEach((v,i)=>{
+  let el=document.createElement("button");
+  el.className="cell";
+  el.style.width="80px";
+  el.style.height="80px";
+  el.style.fontSize="30px";
+  el.textContent="?";
+  el.onclick=()=>memoryClick(i,el);
+  board.appendChild(el);
+ });
+
+ window.memoryClick=function(i,el){
+  let s=gameState.memory;
+  if(s.open.length>=2||s.matched.includes(i)||s.open.includes(i))return;
+
+  el.textContent=s.values[i];
+  s.open.push(i);
+
+  if(s.open.length===2){
+   let [a,b]=s.open;
+
+   setTimeout(()=>{
+    let cells=board.children;
+
+    if(s.values[a]===s.values[b]){
+     s.matched.push(a,b);
+     s.scores[s.turn-1]++;
+    }else{
+     cells[a].textContent="?";
+     cells[b].textContent="?";
+     s.turn=s.turn===1?2:1;
+    }
+
+    s.open=[];
+    $("memoryStatus").textContent=
+      s.matched.length===16
+      ?`P1 ${s.scores[0]} - P2 ${s.scores[1]}`
+      :`P${s.turn} TURN`;
+
+    if(s.matched.length===16){
+     if(s.scores[0]===s.scores[1])tie();
+     else win(s.scores[0]>s.scores[1]?"P1":"P2");
+    }
+   },500);
+  }
+ };
+}
+
+/* =========================================================
+   MATH BATTLE
+========================================================= */
+
+function initMath(){
+ canvas.style.display="none";
+ instruction("Solve the question. P1 presses F, P2 presses /.");
+
+ const area=$("gameArea");
+
+ let a=Math.floor(random(2,20));
+ let b=Math.floor(random(2,20));
+ let op=Math.random()>.5?"+":"×";
+ let ans=op==="+"?a+b:a*b;
+
+ area.innerHTML=`
+ <div class="domGame">
+  <div class="centerBox">
+   <div class="bigText" id="mathQ">${a} ${op} ${b} = ?</div>
+   <input id="mathInput" type="number"
+    style="padding:15px;font-size:24px;background:#080d12;
+    border:1px solid #263943;color:#fff;border-radius:8px;width:180px">
+   <div class="actions" style="justify-content:center">
+    <button class="btn green" onclick="mathAnswer(1)">P1 ANSWER</button>
+    <button class="btn" onclick="mathAnswer(2)">P2 ANSWER</button>
+   </div>
+  </div>
+ </div>`;
+
+ gameState.math={ans,over:false};
+
+ window.mathAnswer=function(p){
+  if(gameState.math.over)return;
+  let val=Number($("mathInput").value);
+
+  if(val===gameState.math.ans){
+   gameState.math.over=true;
+   win("P"+p);
+  }else{
+   $("mathInput").value="";
+   toast("Wrong answer!");
+  }
+ };
+}
+
+/* =========================================================
+   COLOR REFLEX
+========================================================= */
+
+function initColor(){
+ canvas.style.display="none";
+ instruction("Click the button when it becomes GREEN. First correct player wins.");
+
+ const area=$("gameArea");
+
+ area.innerHTML=`
+ <div class="domGame">
+  <div class="centerBox">
+   <div class="scoreHuge" id="colorStatus">WAIT...</div>
+   <div class="colorBox" id="colorBox">WAIT</div>
+   <div class="choiceRow">
+    <button class="choice" onclick="colorClick(1)">P1</button>
+    <button class="choice" onclick="colorClick(2)">P2</button>
+   </div>
+  </div>
+ </div>`;
+
+ let delay=random(1000,3500);
+
+ gameState.color={ready:false};
+
+ setTimeout(()=>{
+  gameState.color.ready=true;
+  $("colorBox").style.background="#00ff88";
+  $("colorBox").style.color="#001b0e";
+  $("colorBox").textContent="CLICK!";
+  $("colorStatus").textContent="GO!";
+ },delay);
+
+ window.colorClick=function(p){
+  if(!gameState.color.ready){
+   toast("TOO EARLY!");
+   return;
+  }
+  gameState.color.ready=false;
+  win("P"+p);
+ };
+}
+
+/* =========================================================
+   SIMPLE GAMES THAT REUSE CANVAS
+========================================================= */
+
+/* Pong etc already implemented */
+
+/* =========================================================
+   RANDOM GAME
+========================================================= */
+
+function randomGame(){
+ let i=Math.floor(Math.random()*games.length);
+ startGame(i);
+ toast("RANDOM GAME: "+games[i][0]);
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetStats(){
+ if(confirm("Reset all HACKR stats?")){
+  stats={wins:0,matches:0};
+  saveStats();
+  toast("STATS RESET");
+ }
+}
+
+/* =========================================================
+   START
+========================================================= */
+
+info("Choose a game to begin.");
+</script>
+
+</body>
+</html>
